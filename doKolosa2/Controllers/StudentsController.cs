@@ -1,6 +1,4 @@
 using doKolosa2.DAL;
-using doKolosa2.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,8 +20,17 @@ public class StudentsController : ControllerBase
         var data = await _context.Students
             .Include(s => s.StudentGroup)
             .OrderBy(s => s.Name)
+            .Select(s =>
+                s.Name)
             .ToListAsync(cancellationToken);
         return Ok(data);
 
     }
+    
+    [HttpGet("debug-connection")]
+    public IActionResult GetDbConnectionString()
+    {
+        return Ok(_context.Database.GetDbConnection().ConnectionString);
+    }
+
 }
